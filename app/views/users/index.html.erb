@@ -15,4 +15,16 @@
     <% end %>
   </tbody>
 </table>
+
 <%= link_to 'New User', new_user_path %>
+
+<h2>Import Users from CSV</h2>
+<%= form_with url: import_users_path, local: true, multipart: true do |form| %>
+  <div>
+    <%= form.label :file, "CSV file" %>
+    <%= form.file_field :file %>
+  </div>
+  <div>
+    <%= form.submit "Import" %>
+  </div>
+<% end %>

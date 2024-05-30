@@ -16,6 +16,15 @@ class UsersController < ApplicationController
     end
   end
 
+  def import
+    if params[:file].present?
+      User.import(params[:file])
+      redirect_to users_path, notice: "Users imported successfully."
+    else
+      redirect_to users_path, alert: "Please upload a CSV file."
+    end
+  end
+
   private
 
   def user_params
