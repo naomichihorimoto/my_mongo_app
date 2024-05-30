@@ -12,17 +12,23 @@ class UsersController < ApplicationController
     if @user.save
       redirect_to users_path, notice: "User was successfully created."
     else
-      render :new
+      flash[:alert] = @user.errors.full_messages.join(", ")
+      render :new, status: :unprocessable_entity
     end
   end
 
   def import
     if params[:file].present?
-      User.import(params[:file])
-      redirect_to users_path, notice: "Users imported successfully."
+      result = User.import(params[:file])
+      if result[:errors].any?
+        flash[:alert] = "There were errors with the following rows: #{result[:errors].join(", ")}"
+      else
+        flash[:notice] = "Users imported successfully."
+      end
     else
-      redirect_to users_path, alert: "Please upload a CSV file."
+      flash[:alert] = "Please upload a CSV file."
     end
+    redirect_to users_path
   end
 
   private
